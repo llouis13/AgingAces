@@ -14,38 +14,41 @@
     <p>User name:</p>
     <p>Password:</p>
 
-    <div id="okta-login-container"></div>
-    <script type="text/javascript">
-        const oktaSignIn = new OktaSignIn({
-          issuer: "dev-81478961.okta.com/oauth2/default",
-          redirectUri: "https://llouis13.github.io/AgingAces/portal",
-          clientId: "0oa4fxvya295ZN4qM5d7",
-          useInteractionCodeFlow: true
-        });
-  
-        oktaSignIn.authClient.token.getUserInfo().then(function(user) {
-          document.getElementById("messageBox").innerHTML = "Hello, " + user.email + "! You are *still* logged in! :)";
-          document.getElementById("logout").style.display = 'block';
-        }, function(error) {
-          oktaSignIn.showSignInToGetTokens({
-            el: '#okta-login-container'
-          }).then(function(tokens) {
-            oktaSignIn.authClient.tokenManager.setTokens(tokens);
-            oktaSignIn.remove();
-  
-            const idToken = tokens.idToken;
-            document.getElementById("messageBox").innerHTML = "Hello, " + idToken.claims.email + "! You just logged in! :)";
-            document.getElementById("logout").style.display = 'block';
-  
-          }).catch(function(err) {
-            console.error(err);
-          });
-        });
-  
-        function logout() {
-          oktaSignIn.authClient.signOut();
-          location.reload();
-        }
-      </script>
+     <!-- where the sign-in form appears -->
+     <div id="okta-login-container"></div>
+     <button id="logout" class="button" onclick="logout()" style="display: none">Logout</button>
+   </div>
+   <script type="text/javascript">
+     const oktaSignIn = new OktaSignIn({
+       issuer: "https://dev-81478961.okta.com/oauth2/default",
+       redirectUri: "https://llouis13.github.io/AgingAces/portal",
+       clientId: "0oa4fxvya295ZN4qM5d7",
+       useInteractionCodeFlow: true
+     });
+
+     oktaSignIn.authClient.token.getUserInfo().then(function(user) {
+       document.getElementById("messageBox").innerHTML = "Hello, " + user.email + "! You are *still* logged in! :)";
+       document.getElementById("logout").style.display = 'block';
+     }, function(error) {
+       oktaSignIn.showSignInToGetTokens({
+         el: '#okta-login-container'
+       }).then(function(tokens) {
+         oktaSignIn.authClient.tokenManager.setTokens(tokens);
+         oktaSignIn.remove();
+
+         const idToken = tokens.idToken;
+         document.getElementById("messageBox").innerHTML = "Hello, " + idToken.claims.email + "! You just logged in! :)";
+         document.getElementById("logout").style.display = 'block';
+
+       }).catch(function(err) {
+         console.error(err);
+       });
+     });
+
+     function logout() {
+       oktaSignIn.authClient.signOut();
+       location.reload();
+     }
+   </script>
 </body>
 </html>
